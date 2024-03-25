@@ -1,37 +1,13 @@
-const Product = require("../models/Product");
-const router = require("express").Router();
-import { Request, Response } from "express";
+import express from 'express';
+import { ProductController } from '../controllers/product.controller';
 
-//Get all products
-router.get("/", async (req: Request, res: Response) => {
-  try {
-    const products = await Product.find();
-    res.status(200).json(products);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json("Error getting products");
-  }
-});
+const productRouter = express.Router();
+const productController = new ProductController();
 
-//Get a single product
-router.get("/:id", async (req: Request, res: Response) => {
-  try {
-    const product = await Product.findById(req.params.id);
-    res.status(200).json(product);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json("Error getting product");
-  }
-});
+// Product routes
+productRouter.post('/create', productController.createProduct);
+productRouter.get('/find', productController.findProduct);
+productRouter.put('/update', productController.updateProduct);
+productRouter.delete('/delete', productController.deleteProduct);
 
-//Add a product
-router.post("/", async (req: Request, res: Response) => {
-  const newProduct = new Product(req.body);
-  try {
-    const savedProduct = await newProduct.save();
-    res.status(201).json(savedProduct);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json("Error saving product");
-  }
-});
+export default productRouter;

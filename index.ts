@@ -1,24 +1,22 @@
+import authRouter from "./routes/auth.routes";
+
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const authRoute = require('./routes/auth.routes');
-const userRoute = require('./routes/user.routes');
 
-const port = process.env.PORT || 3000
 dotenv.config()
+const port = process.env.PORT || 3000
 
-mongoose.connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false
-    }).then(console.log('Connected to MongoDB'))
-    .catch((err: any) => console.log(err));
+mongoose.connect(process.env.MONGODB_URI, {
+}).then(() => {
+  console.log('Connected to MongoDB');
+}).catch((err: any) => {
+  console.error('Failed to connect to MongoDB:', err);
+});
 
 app.use(express.json());
-app.use("/api/auth", authRoute);
-app.use("/api/user", userRoute)
+app.use("/api/auth", authRouter);
  
 
 
